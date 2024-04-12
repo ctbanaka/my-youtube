@@ -37,10 +37,9 @@ app.get('/watch/:videoId', (req, res) => {
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
   const stream = ytdl(videoUrl, { filter: 'audioandvideo', quality: 'highest' });
 
-  res.render('watch', { stream });
+  res.render('watch', { videoId });
 });
 
-// Route to play the video stream
 app.get('/play/:videoId', (req, res) => {
   const videoId = req.params.videoId;
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
