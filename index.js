@@ -4,7 +4,8 @@ const app = express();
 
 
 app.get('/watch', (req, res) => {
-  const videoUrl = req.query.url;
+  const videoId = req.query.id;
+const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
   res.render('video', { videoUrl });
 });
 
