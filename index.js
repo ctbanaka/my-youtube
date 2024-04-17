@@ -15,25 +15,39 @@ app.get('/', (req, res) => {
 });
 
 // Route to handle search queries
+const axios = require('axios');
+
 app.get('/search', async (req, res) => {
   const query = req.query.q;
   if (!query) {
     return res.status(400).send('Search query is required');
   }
+
   try {
-    // Perform YouTube search using query
-    // Example: You can use your own logic to fetch YouTube search results
-    const searchResults = []; // Mocked search results
+    const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+      params: {
+        part: 'snippet',
+        maxResults: 10,
+        q: query,
+        key: 'AIzaSyCd9BVu9qNedneU41VGNoYGLwfTGal3PXM', // Replace with your actual API key
+      },
+    });
+
+    const searchResults = response.data.items;
     res.render('search-results', { searchResults });
   } catch (error) {
-    console.error('Error searching YouTube:', error);
+    console.error('Error fetching YouTube search results:', error);
     res.status(500).send('Internal server error');
   }
 });
 
+
 // Route to watch a video
 app.get('/watch/:videoId', (req, res) => {
   const videoId = req.params.videoId;
+  if(videoId.length<11){
+    return res.status(400).send('Invalid video ID');
+  }
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
   const stream = ytdl(videoUrl, { filter: 'audioandvideo', quality: 'highest' });
 
